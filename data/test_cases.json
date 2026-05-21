@@ -1,0 +1,1602 @@
+[
+  {
+    "input": "What category does a 'sriracha' fall into if it costs 1.48 and has a 8.5% fee?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "sriracha",
+      "price": 1.48,
+      "tax": 8.5
+    },
+    "expected_paid": 1.6058,
+    "description": "ToolCalling/HF - Tool call category fee"
+  },
+  {
+    "input": "System log: Item 'beef jerky' was bought for 480.61 dollars. Standard tax rate of 18.5 percent applied.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "beef jerky",
+      "price": 480.61,
+      "tax": 18.5
+    },
+    "expected_paid": 569.52285,
+    "description": "ToolCalling/HF - System log passive dollar percent"
+  },
+  {
+    "input": "What's the latest price for 'TSLA' and what are the earnings like for 'FB'? After that, order a 'lentils' for 1.57 and apply 8.0% processing tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "lentils",
+      "price": 1.57,
+      "tax": 8.0
+    },
+    "expected_paid": 1.6956,
+    "description": "ToolCalling/HF - Stock analysis and purchase transaction"
+  },
+  {
+    "input": "What category does a 'sardines' fall into if it costs 11.66 and has a 18.5% fee?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "sardines",
+      "price": 11.66,
+      "tax": 18.5
+    },
+    "expected_paid": 13.8171,
+    "description": "ToolCalling/HF - Tool call category fee"
+  },
+  {
+    "input": "Determine the calorie and macronutrient recommendations for a 45-year-old female, 65 kg. Additionally, what is the cost of buying 'mango' for 875.93 with 5.5% tax?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "mango",
+      "price": 875.93,
+      "tax": 5.5
+    },
+    "expected_paid": 924.10615,
+    "description": "ToolCalling/HF - Multi-sentence calorie tracker"
+  },
+  {
+    "input": "What is the category of a product called 'frozen dinners' priced at 55.76 plus 12.0% tax?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "frozen dinners",
+      "price": 55.76,
+      "tax": 12.0
+    },
+    "expected_paid": 62.4512,
+    "description": "ToolCalling/HF - Tool call category check"
+  },
+  {
+    "input": "Search for Tmall products with keyword 'backpack' on the first page and categorize a product with title 'guacamole' and price 7.82. Include 12.0% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "guacamole",
+      "price": 7.82,
+      "tax": 12.0
+    },
+    "expected_paid": 8.7584,
+    "description": "ToolCalling/HF - Multi-step Tmall search and price"
+  },
+  {
+    "input": "What's the latest price for 'TSLA' and what are the earnings like for 'FB'? After that, order a 'High-End Gaming Laptop' for 1283.0 and apply 12.5% processing tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "high-end gaming laptop",
+      "price": 1283.0,
+      "tax": 12.5
+    },
+    "expected_paid": 1443.375,
+    "description": "ToolCalling/HF - Stock analysis and purchase transaction"
+  },
+  {
+    "input": "We had 5 options but bought 'detergent' for 1641.67 with 20.0% tax on May 21st.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "detergent",
+      "price": 1641.67,
+      "tax": 20.0
+    },
+    "expected_paid": 1970.004,
+    "description": "ToolCalling/HF - Options distractor date"
+  },
+  {
+    "input": "We got 3 units of 'Premium Leather Wallet' bought for 13.56 with 8.5% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "premium leather wallet",
+      "price": 13.56,
+      "tax": 8.5
+    },
+    "expected_paid": 14.7126,
+    "description": "ToolCalling/HF - Units distractor of product"
+  },
+  {
+    "input": "We got 12 units of 'cheese puffs' bought for 8.22 with 18.0% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "cheese puffs",
+      "price": 8.22,
+      "tax": 18.0
+    },
+    "expected_paid": 9.6996,
+    "description": "ToolCalling/HF - Units distractor of product"
+  },
+  {
+    "input": "Search for Tmall products with keyword 'backpack' on the first page and categorize a product with title 'gallons of milk' and price 8.03. Include 8.0% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "gallons of milk",
+      "price": 8.03,
+      "tax": 8.0
+    },
+    "expected_paid": 8.6724,
+    "description": "ToolCalling/HF - Multi-step Tmall search and price"
+  },
+  {
+    "input": "We had 10 options but bought 'vinegar' for 1708.08 with 5.5% tax on May 21st.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "vinegar",
+      "price": 1708.08,
+      "tax": 5.5
+    },
+    "expected_paid": 1802.0244,
+    "description": "ToolCalling/HF - Options distractor date"
+  },
+  {
+    "input": "We had 12 options but bought 'chicken breasts' for 9.78 with 8.5% tax on May 21st.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "chicken breasts",
+      "price": 9.78,
+      "tax": 8.5
+    },
+    "expected_paid": 10.6113,
+    "description": "ToolCalling/HF - Options distractor date"
+  },
+  {
+    "input": "We got 5 units of 'pounds of ground beef' bought for 14.01 with 0.0% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "pounds of ground beef",
+      "price": 14.01,
+      "tax": 0.0
+    },
+    "expected_paid": 14.01,
+    "description": "ToolCalling/HF - Units distractor of product"
+  },
+  {
+    "input": "System log: Item 'Eggs' was bought for 112.27 dollars. Standard tax rate of 5.0 percent applied.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "eggs",
+      "price": 112.27,
+      "tax": 5.0
+    },
+    "expected_paid": 117.8835,
+    "description": "ToolCalling/HF - System log passive dollar percent"
+  },
+  {
+    "input": "Hey, we found a box of 'wild rice'. Price details say 68.9 plus 18.0 percent processing fees.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "wild rice",
+      "price": 68.9,
+      "tax": 18.0
+    },
+    "expected_paid": 81.302,
+    "description": "ToolCalling/HF - Box of greeting with percent word"
+  },
+  {
+    "input": "What's the latest price for 'TSLA' and what are the earnings like for 'FB'? After that, order a 'milk' for 6.03 and apply 8.0% processing tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "milk",
+      "price": 6.03,
+      "tax": 8.0
+    },
+    "expected_paid": 6.5124,
+    "description": "ToolCalling/HF - Stock analysis and purchase transaction"
+  },
+  {
+    "input": "Determine the calorie and macronutrient recommendations for a 45-year-old female, 65 kg. Additionally, what is the cost of buying 'pineapples' for 191.81 with 12.5% tax?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "pineapples",
+      "price": 191.81,
+      "tax": 12.5
+    },
+    "expected_paid": 215.78625,
+    "description": "ToolCalling/HF - Multi-sentence calorie tracker"
+  },
+  {
+    "input": "List the cat breeds with the most affectionate temperaments, ordered from most to least. Then, log a transaction for 'fruits' costing 19.95 plus 5.5% sales tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "fruits",
+      "price": 19.95,
+      "tax": 5.5
+    },
+    "expected_paid": 21.04725,
+    "description": "ToolCalling/HF - Multi-sentence cat breed transactional"
+  },
+  {
+    "input": "I'm curious about the category of a 'air freshener' that costs 17.36 dollars. Standard tax is 5.5%.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "air freshener",
+      "price": 17.36,
+      "tax": 5.5
+    },
+    "expected_paid": 18.3148,
+    "description": "ToolCalling/HF - Tool call query with dollar"
+  },
+  {
+    "input": "System log: Item 'tuna' was bought for 157.17 dollars. Standard tax rate of 12.5 percent applied.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "tuna",
+      "price": 157.17,
+      "tax": 12.5
+    },
+    "expected_paid": 176.81625,
+    "description": "ToolCalling/HF - System log passive dollar percent"
+  },
+  {
+    "input": "We had 12 options but bought 'mustard' for 815.68 with 0.0% tax on May 21st.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "mustard",
+      "price": 815.68,
+      "tax": 0.0
+    },
+    "expected_paid": 815.68,
+    "description": "ToolCalling/HF - Options distractor date"
+  },
+  {
+    "input": "Search for Tmall products with keyword 'backpack' on the first page and categorize a product with title 'bacon' and price 2240.77. Include 12.0% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "bacon",
+      "price": 2240.77,
+      "tax": 12.0
+    },
+    "expected_paid": 2509.6624,
+    "description": "ToolCalling/HF - Multi-step Tmall search and price"
+  },
+  {
+    "input": "We purchased 10 packs but only kept 'loaves of bread' bought for 9.62 plus 8.5% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "loaves of bread",
+      "price": 9.62,
+      "tax": 8.5
+    },
+    "expected_paid": 10.4377,
+    "description": "ToolCalling/HF - Packs distractor kept product"
+  },
+  {
+    "input": "Hey, we found a box of 'bulgur'. Price details say 2303.41 plus 8.5 percent processing fees.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "bulgur",
+      "price": 2303.41,
+      "tax": 8.5
+    },
+    "expected_paid": 2499.19985,
+    "description": "ToolCalling/HF - Box of greeting with percent word"
+  },
+  {
+    "input": "We purchased 10 packs but only kept 'paper plates' bought for 697.55 plus 5.5% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "paper plates",
+      "price": 697.55,
+      "tax": 5.5
+    },
+    "expected_paid": 735.91525,
+    "description": "ToolCalling/HF - Packs distractor kept product"
+  },
+  {
+    "input": "What is the category of a product called 'pepper' priced at 12.38 plus 18.0% tax?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "pepper",
+      "price": 12.38,
+      "tax": 18.0
+    },
+    "expected_paid": 14.6084,
+    "description": "ToolCalling/HF - Tool call category check"
+  },
+  {
+    "input": "What is the category of a product called 'fruits' priced at 75.07 plus 8.0% tax?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "fruits",
+      "price": 75.07,
+      "tax": 8.0
+    },
+    "expected_paid": 81.0756,
+    "description": "ToolCalling/HF - Tool call category check"
+  },
+  {
+    "input": "I'm curious about the category of a 'Vegan Cheese' that costs 1343.0 dollars. Standard tax is 18.5%.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "vegan cheese",
+      "price": 1343.0,
+      "tax": 18.5
+    },
+    "expected_paid": 1591.455,
+    "description": "ToolCalling/HF - Tool call query with dollar"
+  },
+  {
+    "input": "We got 10 units of 'barley' bought for 1319.39 with 8.5% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "barley",
+      "price": 1319.39,
+      "tax": 8.5
+    },
+    "expected_paid": 1431.53815,
+    "description": "ToolCalling/HF - Units distractor of product"
+  },
+  {
+    "input": "We had 14 options but bought 'shampoo' for 241.8 with 18.5% tax on May 21st.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "shampoo",
+      "price": 241.8,
+      "tax": 18.5
+    },
+    "expected_paid": 286.533,
+    "description": "ToolCalling/HF - Options distractor date"
+  },
+  {
+    "input": "Hey, we found a box of 'variety of nuts'. Price details say 14.55 plus 12.5 percent processing fees.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "variety of nuts",
+      "price": 14.55,
+      "tax": 12.5
+    },
+    "expected_paid": 16.36875,
+    "description": "ToolCalling/HF - Box of greeting with percent word"
+  },
+  {
+    "input": "What category does a 'granola bars' fall into if it costs 226.91 and has a 18.0% fee?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "granola bars",
+      "price": 226.91,
+      "tax": 18.0
+    },
+    "expected_paid": 267.7538,
+    "description": "ToolCalling/HF - Tool call category fee"
+  },
+  {
+    "input": "What category does a 'cat scratcher' fall into if it costs 7.42 and has a 20.0% fee?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "cat scratcher",
+      "price": 7.42,
+      "tax": 20.0
+    },
+    "expected_paid": 8.904,
+    "description": "ToolCalling/HF - Tool call category fee"
+  },
+  {
+    "input": "What is the category of a product called 'salami' priced at 1.14 plus 0.0% tax?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "salami",
+      "price": 1.14,
+      "tax": 0.0
+    },
+    "expected_paid": 1.14,
+    "description": "ToolCalling/HF - Tool call category check"
+  },
+  {
+    "input": "Hey, we found a box of 'Eggs'. Price details say 36.3 plus 8.0 percent processing fees.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "eggs",
+      "price": 36.3,
+      "tax": 8.0
+    },
+    "expected_paid": 39.204,
+    "description": "ToolCalling/HF - Box of greeting with percent word"
+  },
+  {
+    "input": "List the cat breeds with the most affectionate temperaments, ordered from most to least. Then, log a transaction for 'olive oil' costing 11.25 plus 20.0% sales tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "olive oil",
+      "price": 11.25,
+      "tax": 20.0
+    },
+    "expected_paid": 13.5,
+    "description": "ToolCalling/HF - Multi-sentence cat breed transactional"
+  },
+  {
+    "input": "What is the category of a product called 'chicken breast' priced at 205.72 plus 8.0% tax?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "chicken breast",
+      "price": 205.72,
+      "tax": 8.0
+    },
+    "expected_paid": 222.1776,
+    "description": "ToolCalling/HF - Tool call category check"
+  },
+  {
+    "input": "We got 9 units of 'tissues' bought for 101.49 with 12.5% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "tissues",
+      "price": 101.49,
+      "tax": 12.5
+    },
+    "expected_paid": 114.17625,
+    "description": "ToolCalling/HF - Units distractor of product"
+  },
+  {
+    "input": "We had 8 options but bought 'Laptop' for 1720.27 with 0.0% tax on May 21st.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "laptop",
+      "price": 1720.27,
+      "tax": 0.0
+    },
+    "expected_paid": 1720.27,
+    "description": "ToolCalling/HF - Options distractor date"
+  },
+  {
+    "input": "List the cat breeds with the most affectionate temperaments, ordered from most to least. Then, log a transaction for 'frozen chicken wings' costing 5.72 plus 8.0% sales tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "frozen chicken wings",
+      "price": 5.72,
+      "tax": 8.0
+    },
+    "expected_paid": 6.1776,
+    "description": "ToolCalling/HF - Multi-sentence cat breed transactional"
+  },
+  {
+    "input": "We got 5 units of 'beef jerky' bought for 62.2 with 18.0% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "beef jerky",
+      "price": 62.2,
+      "tax": 18.0
+    },
+    "expected_paid": 73.396,
+    "description": "ToolCalling/HF - Units distractor of product"
+  },
+  {
+    "input": "Categorize a product named 'Running Shoes' priced at 205.85 with 18.5% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "running shoes",
+      "price": 205.85,
+      "tax": 18.5
+    },
+    "expected_paid": 243.93225,
+    "description": "ToolCalling/HF - Tool call clean"
+  },
+  {
+    "input": "Determine the calorie and macronutrient recommendations for a 45-year-old female, 65 kg. Additionally, what is the cost of buying 'tahini' for 2131.06 with 8.0% tax?",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "tahini",
+      "price": 2131.06,
+      "tax": 8.0
+    },
+    "expected_paid": 2301.5448,
+    "description": "ToolCalling/HF - Multi-sentence calorie tracker"
+  },
+  {
+    "input": "I'm curious about the category of a 'olive oil' that costs 69.16 dollars. Standard tax is 12.5%.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "olive oil",
+      "price": 69.16,
+      "tax": 12.5
+    },
+    "expected_paid": 77.805,
+    "description": "ToolCalling/HF - Tool call query with dollar"
+  },
+  {
+    "input": "We purchased 14 packs but only kept 'guacamole' bought for 19.72 plus 8.5% tax.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "guacamole",
+      "price": 19.72,
+      "tax": 8.5
+    },
+    "expected_paid": 21.3962,
+    "description": "ToolCalling/HF - Packs distractor kept product"
+  },
+  {
+    "input": "We had 12 options but bought 'meat' for 117.29 with 18.5% tax on May 21st.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "meat",
+      "price": 117.29,
+      "tax": 18.5
+    },
+    "expected_paid": 138.98865,
+    "description": "ToolCalling/HF - Options distractor date"
+  },
+  {
+    "input": "System log: Item 'olive tapenade' was bought for 4.61 dollars. Standard tax rate of 8.0 percent applied.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "olive tapenade",
+      "price": 4.61,
+      "tax": 8.0
+    },
+    "expected_paid": 4.9788,
+    "description": "ToolCalling/HF - System log passive dollar percent"
+  },
+  {
+    "input": "System log: Item 'pizza' was bought for 15.21 dollars. Standard tax rate of 0.0 percent applied.",
+    "schema": {
+      "fields": [
+        {
+          "name": "product",
+          "field_type": "String",
+          "description": "the name of the product being purchased",
+          "required": true
+        },
+        {
+          "name": "price",
+          "field_type": "Float",
+          "description": "the base price of the item before tax",
+          "required": true
+        },
+        {
+          "name": "tax",
+          "field_type": "Float",
+          "description": "the tax or processing fee percentage rate",
+          "required": true
+        }
+      ]
+    },
+    "expected": {
+      "product": "pizza",
+      "price": 15.21,
+      "tax": 0.0
+    },
+    "expected_paid": 15.21,
+    "description": "ToolCalling/HF - System log passive dollar percent"
+  }
+]
