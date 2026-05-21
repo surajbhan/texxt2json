@@ -10,6 +10,14 @@ pub struct MultiLayerParser {
     qwen_layer: Option<layers::qwen::QwenLayer>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub enum ExtractionLayer {
+    Gliner,
+    Flan,
+    Qwen,
+    ProximityHeuristic,
+}
+
 impl MultiLayerParser {
     pub fn new(gliner_path: &str, flan_path: &str, qwen_path: &str) -> Result<Self> {
         let gliner_layer = if !gliner_path.is_empty() && std::path::Path::new(gliner_path).exists() {
@@ -43,8 +51,8 @@ impl MultiLayerParser {
         })
     }
 
-    /// Primary execution routing mechanism using custom schemas
-    pub fn process_text(&self, input: &str, schema: &ExtractionSchema) -> serde_json::Value {
+    /// Primary execution routing mechanism using custom schemas returning metadata
+    pub fn process_text_with_metadata(&self, input: &str, schema: &ExtractionSchema) -> (serde_json::Value, ExtractionLayer) {
         println!("[Pipeline] Sourcing message: \"{}\"", input);
 
         // --- LAYER 1: GLiNER (ONNX) ---
@@ -52,7 +60,7 @@ impl MultiLayerParser {
             match gliner.extract(input, schema) {
                 Ok(Some(raw)) => {
                     println!("[Success] Executed via Layer 1 (GLiNER) ~10ms");
-                    return raw;
+                    return (raw, ExtractionLayer::Gliner);
                 }
                 Ok(None) => {}
                 Err(e) => {
@@ -67,7 +75,7 @@ impl MultiLayerParser {
             match flan.translate(input, schema) {
                 Ok(Some(raw)) => {
                     println!("[Success] Executed via Layer 2 (Flan-T5) ~45ms");
-                    return raw;
+                    return (raw, ExtractionLayer::Flan);
                 }
                 Ok(None) => {}
                 Err(e) => {
@@ -82,7 +90,7 @@ impl MultiLayerParser {
             match qwen.extract(input, schema) {
                 Ok(payload) => {
                     println!("[Success] Handled by Layer 3 Failsafe (Qwen-0.8B) ~800ms");
-                    return payload;
+                    return (payload, ExtractionLayer::Qwen);
                 }
                 Err(e) => {
                     eprintln!("[Layer 3 Warning] Failsafe generation failed: {}", e);
@@ -92,9 +100,15 @@ impl MultiLayerParser {
 
         // --- LAYER 4: Local High-Fidelity Heuristic Fallback (Production-ready resiliency) ---
         println!("[Resiliency] Activating local high-fidelity entity segmenter.");
-        extract_via_proximity_heuristic(input, schema)
+        (extract_via_proximity_heuristic(input, schema), ExtractionLayer::ProximityHeuristic)
+    }
+
+    /// Backward compatible primary execution routing mechanism
+    pub fn process_text(&self, input: &str, schema: &ExtractionSchema) -> serde_json::Value {
+        self.process_text_with_metadata(input, schema).0
     }
 }
+
 
 /// Top-level convenience function that takes an input string and a schema,
 /// and produces the extracted JSON payload.

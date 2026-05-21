@@ -1,4 +1,4 @@
-use structured_json_pipeline::{MultiLayerParser, ExtractionSchema};
+use structured_json_pipeline::{MultiLayerParser, ExtractionSchema, ExtractionLayer};
 use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
@@ -86,18 +86,31 @@ fn main() -> Result<()> {
     let mut total_latency = std::time::Duration::from_secs(0);
     let mut latencies_ms = Vec::new();
 
+    // Layer counters
+    let mut gliner_count = 0;
+    let mut flan_count = 0;
+    let mut qwen_count = 0;
+    let mut proximity_count = 0;
+
     println!("{:<4} | {:<25} | {:<12} | {:<12} | {:<8} | {:<7}", 
              "ID", "Description", "Exp Paid", "Act Paid", "Latency", "Status");
     println!("{}", "-".repeat(78));
 
     for (idx, tc) in test_cases.iter().enumerate() {
         let start = Instant::now();
-        let payload = parser.process_text(&tc.input, &tc.schema);
+        let (payload, layer) = parser.process_text_with_metadata(&tc.input, &tc.schema);
         let latency = start.elapsed();
         
         total_latency += latency;
         let latency_ms = latency.as_secs_f64() * 1000.0;
         latencies_ms.push(latency_ms);
+
+        match layer {
+            ExtractionLayer::Gliner => gliner_count += 1,
+            ExtractionLayer::Flan => flan_count += 1,
+            ExtractionLayer::Qwen => qwen_count += 1,
+            ExtractionLayer::ProximityHeuristic => proximity_count += 1,
+        }
 
         let is_ok = assert_json_eq(&payload, &tc.expected);
 
@@ -146,6 +159,14 @@ fn main() -> Result<()> {
     println!("Mean Latency     : {:.2}ms", mean_latency);
     println!("P95 Latency      : {:.2}ms", p95_latency);
     println!("P99 Latency      : {:.2}ms", p99_latency);
+    
+    println!("{}", "=".repeat(78));
+    println!("                PIPELINE LAYER ROUTING SEGREGATION           ");
+    println!("{}", "=".repeat(78));
+    println!("Layer 1 (GLiNER ONNX)       : {:>4} cases ({:>6.2}%)", gliner_count, (gliner_count as f64 / total_cases as f64) * 100.0);
+    println!("Layer 2 (Flan-T5 ONNX)      : {:>4} cases ({:>6.2}%)", flan_count, (flan_count as f64 / total_cases as f64) * 100.0);
+    println!("Layer 3 (Qwen-0.8B GGUF)    : {:>4} cases ({:>6.2}%)", qwen_count, (qwen_count as f64 / total_cases as f64) * 100.0);
+    println!("Layer 4 (Proximity Heur.)   : {:>4} cases ({:>6.2}%)", proximity_count, (proximity_count as f64 / total_cases as f64) * 100.0);
     println!("{}", "=============================================================");
 
     if accuracy == 100.0 {
@@ -157,3 +178,4 @@ fn main() -> Result<()> {
 
     Ok(())
 }
+
