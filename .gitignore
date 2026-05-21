@@ -3,3 +3,4 @@
 /.antigravitycli
 .DS_Store
 *.rs.bk
+/models

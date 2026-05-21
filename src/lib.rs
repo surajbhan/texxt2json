@@ -28,11 +28,21 @@ impl MultiLayerParser {
             None
         };
 
-        let flan_layer = if !flan_path.is_empty() && std::path::Path::new(flan_path).exists() {
-            println!("[Pipeline] Loading Layer 2: Flan-T5 (ONNX) from {}", flan_path);
-            Some(layers::flan::FlanLayer::new(flan_path)?)
+        let flan_layer = if !flan_path.is_empty() {
+            let path = std::path::Path::new(flan_path);
+            let parent = path.parent().unwrap_or_else(|| std::path::Path::new("."));
+            let exists = path.exists() 
+                || parent.join("flan_t5_encoder.onnx").exists()
+                || parent.join("flan_encoder.onnx").exists();
+                
+            if exists {
+                println!("[Pipeline] Loading Layer 2: Flan-T5 (ONNX) from {}", flan_path);
+                Some(layers::flan::FlanLayer::new(flan_path)?)
+            } else {
+                println!("[Pipeline] Bypassing Layer 2: Flan-T5 model file not found.");
+                None
+            }
         } else {
-            println!("[Pipeline] Bypassing Layer 2: Flan-T5 model file not found.");
             None
         };
 
@@ -115,7 +125,7 @@ impl MultiLayerParser {
 pub fn extract_json(input: &str, schema: &ExtractionSchema) -> serde_json::Value {
     let parser = MultiLayerParser::new(
         "models/gliner_medium.onnx",
-        "models/flan_t5_base.onnx",
+        "models/flan_t5_encoder.onnx",
         "models/qwen3.5_0.8b_q4.gguf"
     ).unwrap_or_else(|_| MultiLayerParser {
         gliner_layer: None,
