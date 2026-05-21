@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to Demo...</title>
+    <meta http-equiv="refresh" content="0; url=./demo/index.html">
+    <style>
+        body {
+            background-color: #030712;
+            color: #9ca3af;
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+        }
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner"></div>
+        <p>Redirecting to JSON Extract Pro Dashboard...</p>
+        <p style="font-size: 0.85em; opacity: 0.7;">
+            If you are not redirected automatically, <a href="./demo/index.html" style="color: #3b82f6; text-decoration: none;">click here</a>.
+        </p>
+    </div>
+</body>
+</html>
