@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Extract Pro | Dark Glassmorphism WASM Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#030712',
+                        }
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 20px rgba(59, 130, 246, 0.4)',
+                        'neon-purple': '0 0 20px rgba(168, 85, 247, 0.4)',
+                        'neon-cyan': '0 0 20px rgba(6, 182, 212, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 10%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
+                radial-gradient(at 50% 80%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.45);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.3);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-blue:hover {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.35);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        .glow-purple:hover {
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.35);
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.2);
+        }
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen scrollbar-custom antialiased pb-12">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-white/5 bg-slate-950/60 py-4 px-6 mb-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 shadow-neon-blue">
+                    <i class="fa-solid fa-microchip-ascii text-white text-xl animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-400 bg-clip-text text-transparent">
+                        JSON EXTRACT PRO
+                    </h1>
+                    <p class="text-xs text-slate-400 tracking-wider">SCHEMA-DRIVEN WASM EXTRACTOR</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    WASM Active
+                </span>
+                <span id="speed-meter" class="text-xs code-font text-cyan-400 bg-slate-900/60 px-3 py-1 rounded-lg border border-cyan-500/20">
+                    Latency: -- ms
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left Panel: Text input and layer order configuration (5 cols) -->
+        <section class="lg:col-span-5 flex flex-col gap-6">
+            
+            <!-- Quick Preset Selector -->
+            <div class="glass-panel rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                <h2 class="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-cyan-400"></i>
+                    Interactive Domain Templates
+                </h2>
+                <div class="grid grid-cols-2 gap-2" id="preset-buttons">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Natural Language input -->
+            <div class="glass-panel rounded-2xl p-5 shadow-lg flex-1 flex flex-col min-h-[300px]">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                        <i class="fa-solid fa-file-text text-blue-400"></i>
+                        Unstructured Source Text
+                    </h2>
+                    <span id="char-counter" class="text-xs text-slate-500">0 chars</span>
+                </div>
+                <div class="relative flex-1 flex flex-col gap-3">
+                    <textarea id="source-text" class="w-full flex-1 min-h-[180px] bg-slate-950/60 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 code-font scrollbar-custom resize-none" placeholder="Enter unstructured text here..."></textarea>
+                    <div class="flex gap-2 justify-end">
+                        <button id="clear-btn" class="px-4 py-2 bg-slate-900/60 hover:bg-slate-800/80 rounded-xl text-xs font-semibold text-slate-400 hover:text-white border border-slate-800 transition-all duration-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-trash-can"></i> Clear
+                        </button>
+                        <button id="extract-btn" class="px-5 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 rounded-xl text-xs font-bold text-white shadow-neon-blue transition-all duration-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-bolt"></i> Extract
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pipeline Ordering & Active Layers -->
+            <div class="glass-panel rounded-2xl p-5 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                            <i class="fa-solid fa-route text-purple-400"></i>
+                            Adaptive Execution Cascade
+                        </h2>
+                        <p class="text-[11px] text-slate-500">Enable, disable, or drag/reorder steps at runtime.</p>
+                    </div>
+                </div>
+                <div id="pipeline-layers" class="flex flex-col gap-2.5">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Middle/Right Panel: Schema Builder and JSON Result (7 cols) -->
+        <section class="lg:col-span-7 flex flex-col gap-6">
+            
+            <!-- Schema Definition Builder -->
+            <div class="glass-panel rounded-2xl p-5 shadow-lg">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/5">
+                    <div>
+                        <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-cyan-400"></i>
+                            Dynamic Schema Definition
+                        </h2>
+                        <p class="text-[11px] text-slate-500">Specify expected payload parameters and type definitions.</p>
+                    </div>
+                    <button id="add-field-btn" class="px-3.5 py-1.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 rounded-xl text-xs font-semibold shadow-neon-blue transition-all duration-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-plus text-xs"></i> Add Field
+                    </button>
+                </div>
+                <div id="schema-fields-container" class="flex flex-col gap-3 max-h-[300px] overflow-y-auto scrollbar-custom pr-1.5">
+                    <!-- Fields injected dynamically -->
+                </div>
+            </div>
+
+            <!-- JSON Output & Metrics -->
+            <div class="glass-panel rounded-2xl p-5 shadow-lg flex-1 flex flex-col">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-code text-indigo-400"></i>
+                            Extraction Payload Output
+                        </h2>
+                        <span id="fallback-badge" class="hidden text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                            Proximity Heuristic Fallback
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <button id="copy-btn" class="p-2 bg-slate-900/60 hover:bg-slate-800 rounded-xl text-xs text-slate-400 hover:text-white border border-slate-800 transition-all duration-300 flex items-center gap-1.5" title="Copy payload">
+                            <i class="fa-solid fa-copy"></i> Copy
+                        </button>
+                        <button id="download-btn" class="p-2 bg-slate-900/60 hover:bg-slate-800 rounded-xl text-xs text-slate-400 hover:text-white border border-slate-800 transition-all duration-300 flex items-center gap-1.5" title="Download payload as JSON">
+                            <i class="fa-solid fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Structured output and metrics layout -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 flex-1">
+                    
+                    <!-- Code view -->
+                    <div class="md:col-span-7 flex flex-col relative min-h-[300px]">
+                        <pre id="output-json" class="flex-1 w-full bg-slate-950/80 rounded-xl p-4 text-xs code-font text-emerald-400 border border-slate-900 overflow-auto scrollbar-custom select-text whitespace-pre-wrap"></pre>
+                    </div>
+
+                    <!-- Visual attributes breakdown list from extracted JSON -->
+                    <div class="md:col-span-5 flex flex-col bg-slate-900/20 rounded-xl p-4 border border-white/5 min-h-[300px]">
+                        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Extracted Entity Values</h3>
+                        <div id="visual-breakdown-container" class="flex flex-col gap-2.5 overflow-y-auto max-h-[320px] scrollbar-custom pr-1.5">
+                            <!-- Visual cards updated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- JS Module for WASM Loading and Operations -->
+    <script type="module">
+        import init, { extract_json_wasm } from '../pkg/structured_json_pipeline.js';
+
+        // Custom template models
+        const presets = [
+            {
+                id: "grocery",
+                label: "Grocery purchase",
+                icon: "fa-basket-shopping text-cyan-400",
+                text: "I visited the storefront and grabbed 3 bottles of premium 'sriracha sauce' for which the price is listed as $1.48 each. The system computed a surcharge of 8.5% percent tax. Let's make sure boolean flag paid is checked yes.",
+                schema: {
+                    fields: [
+                        { name: "product_item", field_type: "String", description: "The product or item title", required: true },
+                        { name: "item_quantity", field_type: "Integer", description: "Total quantity bought", required: true },
+                        { name: "unit_price", field_type: "Float", description: "Cost per single item", required: true },
+                        { name: "tax_rate", field_type: "Float", description: "Associated tax percentage", required: true },
+                        { name: "paid", field_type: "Boolean", description: "Whether transaction is completed", required: true }
+                    ]
+                }
+            },
+            {
+                id: "aviation",
+                label: "Flight Confirmation",
+                icon: "fa-plane-departure text-purple-400",
+                text: "Success! Your ticket from 'SFO' to 'JFK' on flight UA-772 has been confirmed for seat '14B'. The fare is $452.80 with luggage included as active (true). Enjoy your travel on 2026.",
+                schema: {
+                    fields: [
+                        { name: "origin", field_type: "String", description: "Flight departure airport", required: true },
+                        { name: "destination", field_type: "String", description: "Flight destination airport", required: true },
+                        { name: "flight_number", field_type: "String", description: "Airline flight identifier", required: true },
+                        { name: "seat", field_type: "String", description: "Passenger seat row and number", required: true },
+                        { name: "fare_cost", field_type: "Float", description: "Base cost paid in USD", required: true },
+                        { name: "luggage_included", field_type: "Boolean", description: "Is check-in luggage included in fare", required: true }
+                    ]
+                }
+            },
+            {
+                id: "finance",
+                label: "Stock Trade Ledger",
+                icon: "fa-chart-line text-blue-400",
+                text: "Order Execute: Buy 15 shares of Apple Inc. listed as symbol 'AAPL' at pricing $182.50. The transaction status is marked settled (yes) with commission fee of $4.99.",
+                schema: {
+                    fields: [
+                        { name: "symbol", field_type: "String", description: "Stock ticker letter code", required: true },
+                        { name: "company", field_type: "String", description: "Full name of corporate index", required: true },
+                        { name: "shares", field_type: "Integer", description: "Stock amount purchased", required: true },
+                        { name: "share_price", field_type: "Float", description: "Cost per single stock share", required: true },
+                        { name: "commission", field_type: "Float", description: "Trading commission amount", required: false },
+                        { name: "settled", field_type: "Boolean", description: "Has payment settled fully", required: true }
+                    ]
+                }
+            },
+            {
+                id: "contacts",
+                label: "CRM Contact Slip",
+                icon: "fa-address-card text-emerald-400",
+                text: "Contact details updated: 'John Doe' who identifies as a 'Senior Software Architect' at Microsoft. Reach John at john.doe@example.com or mobile 5551234. Active client status: yes.",
+                schema: {
+                    fields: [
+                        { name: "full_name", field_type: "String", description: "Personal first and last name", required: true },
+                        { name: "job_title", field_type: "String", description: "Executive role profile", required: true },
+                        { name: "organization", field_type: "String", description: "Employer corporate business name", required: true },
+                        { name: "active_contract", field_type: "Boolean", description: "Is john an active active subscriber", required: true }
+                    ]
+                }
+            }
+        ];
+
+        // Active State of Page UI
+        let activeSchema = JSON.parse(JSON.stringify(presets[0].schema));
+        window.activeSchema = activeSchema;
+        window.presets = presets;
+        let layersOrder = [
+            { id: "gliner", label: "Layer 1: GLiNER EN", description: "Sub-millisecond entity segmenter (ONNX)", active: false, badge: "ONNX WASM", badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-neon-glow" },
+            { id: "flan", label: "Layer 2: Flan-T5 Translation", description: "Grammar-guided translation engine (ONNX)", active: false, badge: "Native Only", badgeColor: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20" },
+            { id: "qwen", label: "Layer 3: Qwen LLM Failsafe", description: "GBNF Constrained Generator (GGUF)", active: false, badge: "Native Only", badgeColor: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20" },
+            { id: "proximity", label: "Layer 4: Proximity Heuristic", description: "Ultra-fast resilient WASM extraction", active: true, badge: "WASM Native", badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" }
+        ];
+        window.layersOrder = layersOrder;
+
+        let wasmLoaded = false;
+        let classifier = null;
+        let isModelLoading = false;
+        let extractionTaskId = 0;
+
+        async function initWasm() {
+            try {
+                await init();
+                wasmLoaded = true;
+                console.log("[WASM] WebAssembly payload loaded successfully!");
+                document.getElementById('speed-meter').textContent = "WASM Initialized";
+                runExtraction();
+            } catch (error) {
+                console.error("[WASM] Initialization failed: ", error);
+                document.getElementById('speed-meter').textContent = "WASM Error";
+                document.getElementById('speed-meter').className = "text-xs code-font text-rose-400 bg-rose-950/20 px-3 py-1 rounded-lg border border-rose-500/20";
+            }
+        }
+
+        // Lazy-load the ONNX zero-shot classifier model in browser
+        async function getClassifier() {
+            window.getClassifier = getClassifier;
+            if (classifier) return classifier;
+            if (isModelLoading) return null;
+            isModelLoading = true;
+            const meter = document.getElementById('speed-meter');
+            meter.textContent = "Loading ONNX NLP Model...";
+            meter.className = "text-xs code-font text-amber-400 bg-amber-950/20 px-3 py-1 rounded-lg border border-amber-500/20 animate-pulse";
+            try {
+                // Load highly optimized MobileBERT model for client-side zero-shot classification
+                const { pipeline, env } = await import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.14.0');
+                env.allowLocalModels = false;
+                classifier = await pipeline('zero-shot-classification', 'Xenova/mobilebert-uncased-mnli');
+                meter.textContent = "ONNX Model Ready";
+                meter.className = "text-xs code-font text-emerald-400 bg-emerald-950/20 px-3 py-1 rounded-lg border border-emerald-500/20";
+                isModelLoading = false;
+                return classifier;
+            } catch (err) {
+                console.error("[ONNX] Model load failed: ", err);
+                meter.textContent = "ONNX Load Error";
+                meter.className = "text-xs code-font text-rose-400 bg-rose-950/20 px-3 py-1 rounded-lg border border-rose-500/20";
+                isModelLoading = false;
+                return null;
+            }
+        }
+
+        // Perform zero-shot GLiNER-like extraction inside the browser using ONNX runtime
+        async function runGlinerBrowser(text, schema, isCancelled) {
+            window.runGlinerBrowser = runGlinerBrowser;
+            const clf = await getClassifier();
+            if (!clf) {
+                // If model is still loading or failed, fall back gracefully to WASM heuristic
+                const rawWasm = extract_json_wasm(text, JSON.stringify(schema));
+                return JSON.parse(rawWasm);
+            }
+
+            // Extract candidate spans from the source text (quoted segments, capitalized proper nouns, and unique words)
+            let candidates = [];
+            
+            // Define active stopwords list which is shared across candidate extraction steps
+            const stopwords = new Set([
+                "a", "an", "the", "and", "or", "but", "if", "then", "else", "when", 
+                "at", "by", "from", "for", "with", "in", "on", "to", "of", "who", "whom", 
+                "which", "as", "is", "was", "were", "be", "been", "being", "has", "have", 
+                "had", "do", "does", "did", "details", "updated", "status", "active", 
+                "checked", "yes", "no", "this", "that", "these", "those", "i", "you", 
+                "he", "she", "it", "we", "they", "my", "your", "his", "her", "its", "our", "their",
+                "who", "identifies", "reach", "mobile", "contact", "system", "computed", "grabbed"
+            ]);
+
+            // 1. Extract double/single quoted phrases
+            const quoteRegex = /(['"`])(.*?)\1/g;
+            let match;
+            while ((match = quoteRegex.exec(text)) !== null) {
+                const term = match[2].trim();
+                if (term.length > 1 && !candidates.includes(term)) {
+                    candidates.push(term);
+                }
+            }
+
+            // 2. Extract continuous capitalized words/phrases (Proper nouns like Microsoft, Apple Inc., UA-772)
+            const capRegex = /[A-Z][a-zA-Z0-9\-]+(?:\s+[A-Z][a-zA-Z0-9\-]+)*/g;
+            while ((match = capRegex.exec(text)) !== null) {
+                let term = match[0].trim();
+                
+                // If starts with a sentence-starting verb or stopword, trim it
+                const words = term.split(/\s+/);
+                if (words.length > 1 && stopwords.has(words[0].toLowerCase())) {
+                    term = words.slice(1).join(" ");
+                }
+                
+                const lowerTerm = term.toLowerCase();
+                if (stopwords.has(lowerTerm) || lowerTerm === "contact" || lowerTerm === "order" || lowerTerm === "success" || lowerTerm === "client" || lowerTerm === "status") {
+                    continue;
+                }
+                if (term.length > 1 && !candidates.includes(term)) {
+                    candidates.push(term);
+                }
+            }
+
+            // 3. Extract other candidate words, filtering out common English stopwords
+            const terms = text.split(/[\s,.;:!?()]+/);
+            terms.forEach(t => {
+                const clean = t.trim().replace(/['"`]/g, "");
+                if (clean.length > 2 && !/^\d+$/.test(clean)) {
+                    const lower = clean.toLowerCase();
+                    if (!stopwords.has(lower)) {
+                        if (!candidates.some(c => c.toLowerCase() === lower)) {
+                            candidates.push(clean);
+                        }
+                    }
+                }
+            });
+
+            // Filter out nested candidate redundant substrings (e.g. "John" inside "John Doe")
+            candidates = candidates.filter(cand => {
+                const lowerA = cand.toLowerCase();
+                const residesInOther = candidates.some(other => {
+                    const lowerB = other.toLowerCase();
+                    return lowerB !== lowerA && lowerB.includes(lowerA);
+                });
+                return !residesInOther;
+            });
+
+            // Fallback to empty if no valid spans found
+            if (candidates.length === 0) {
+                return JSON.parse(extract_json_wasm(text, JSON.stringify(schema)));
+            }
+
+            // Limit processing depth for superb latency and higher CPU concurrency safety
+            candidates = candidates.slice(0, 8);
+
+            let glinerOutput = {};
+            const stringFields = schema.fields.filter(f => f.field_type === "String");
+
+            if (stringFields.length > 0) {
+                // Categorize each custom field to standard semantic classes for precise NLI zero-shot entailment
+                function getEntityLabelForField(field) {
+                    const name = field.name.toLowerCase();
+                    const desc = (field.description || "").toLowerCase();
+                    
+                    if (name.includes("organization") || name.includes("company") || name.includes("employer") || name.includes("business") || name.includes("brand") || desc.includes("organization") || desc.includes("company") || desc.includes("employer")) {
+                        return "a company name";
+                    }
+                    if (name.includes("title") || name.includes("role") || name.includes("job") || name.includes("profession") || name.includes("occupation") || desc.includes("role") || desc.includes("job") || desc.includes("profession")) {
+                        return "a job title";
+                    }
+                    if (name.includes("name") || name.includes("person") || name.includes("passenger") || desc.includes("name") || desc.includes("person")) {
+                        return "a person's name";
+                    }
+                    if (name.includes("origin") || name.includes("destination") || name.includes("airport") || name.includes("city") || name.includes("location") || name.includes("place") || desc.includes("airport") || desc.includes("city") || desc.includes("location")) {
+                        return "a location";
+                    }
+                    if (name.includes("product") || name.includes("item") || name.includes("good") || name.includes("object") || desc.includes("product") || desc.includes("item") || desc.includes("commodity")) {
+                        return "a product name";
+                    }
+                    if (name.includes("seat") || name.includes("ticket") || name.includes("number") || name.includes("flight") || name.includes("id") || name.includes("symbol") || name.includes("ledger") || desc.includes("seat") || desc.includes("flight") || desc.includes("ticker")) {
+                        return "a code, seat, ticker, or identifier";
+                    }
+                    return "a " + (field.description || field.name);
+                }
+
+                const labelsMap = {};
+                const labelsList = [];
+
+                stringFields.forEach(f => {
+                    const entityLabel = getEntityLabelForField(f).toLowerCase();
+                    labelsMap[entityLabel] = f.name;
+                    labelsList.push(entityLabel);
+                });
+
+                const unrelatedLabel = "unrelated text";
+                labelsList.push(unrelatedLabel);
+
+                const bestMatches = {};
+                stringFields.forEach(f => {
+                    bestMatches[f.name] = { cand: "unknown", score: 0 };
+                });
+
+                // Classify each candidate phrase against all targets in one pass
+                for (const cand of candidates) {
+                    if (isCancelled && isCancelled()) {
+                        console.log("[ONNX Debug] Execution cancelled, aborting classification loop.");
+                        return null;
+                    }
+                    try {
+                        // Use highly optimized Config 5 hypothesis template ("This refers to {}")
+                        const prediction = await clf(cand, labelsList, { hypothesis_template: "This refers to {}." });
+                        console.log(`[ONNX Debug] Candidate: "${cand}"`);
+                        
+                        const bestLabel = prediction.labels[0];
+                        const bestScore = prediction.scores[0];
+                        console.log(`  -> Best Class: "${bestLabel}" | Score: ${bestScore.toFixed(4)}`);
+
+                        if (bestLabel !== unrelatedLabel && bestScore > 0.35) {
+                            const fieldName = labelsMap[bestLabel];
+                            if (fieldName && bestScore > bestMatches[fieldName].score) {
+                                bestMatches[fieldName] = { cand, score: bestScore };
+                            }
+                        }
+                    } catch (err) {
+                        console.error("[ONNX Inference Error]", err);
+                    }
+                }
+
+                stringFields.forEach(f => {
+                    glinerOutput[f.name] = bestMatches[f.name].cand;
+                });
+            }
+
+            // Intersect and enrich with WASM proximity heuristics (integers, floats, booleans, and string fallbacks)
+            const rawWasmResult = JSON.parse(extract_json_wasm(text, JSON.stringify(schema)));
+            for (const key in rawWasmResult) {
+                if (glinerOutput[key] === undefined || glinerOutput[key] === "unknown") {
+                    glinerOutput[key] = rawWasmResult[key];
+                }
+            }
+
+            return glinerOutput;
+        }
+
+        // Trigger reactive extraction whenever called 
+        async function runExtraction() {
+            window.runExtraction = runExtraction;
+            if (!wasmLoaded) return;
+
+            extractionTaskId++;
+            const currentTaskId = extractionTaskId;
+            const isCancelled = () => currentTaskId !== extractionTaskId;
+
+            const textInput = document.getElementById('source-text').value;
+            document.getElementById('char-counter').textContent = `${textInput.length} chars`;
+
+            const t0 = performance.now();
+            let jsonOutputStr = "{}";
+            let activeLayerName = "";
+
+            const glinerLayer = layersOrder.find(l => l.id === "gliner");
+            if (glinerLayer && glinerLayer.active) {
+                // Display loader in output pane during active ONNX model computation
+                document.getElementById('output-json').innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full py-12 gap-3 text-slate-400">
+                        <i class="fa-solid fa-circle-notch animate-spin text-3xl text-cyan-500"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider animate-pulse text-cyan-400">Layer 1 (ONNX) Processing...</span>
+                        <span class="text-[10px] text-slate-600">Executing zero-shot client classification</span>
+                    </div>
+                `;
+
+                try {
+                    const resObj = await runGlinerBrowser(textInput, activeSchema, isCancelled);
+                    if (isCancelled()) {
+                        console.log("[Extraction] Newer extraction started, discarding stale task:", currentTaskId);
+                        return;
+                    }
+                    if (!resObj) return; // cancelled or empty
+                    
+                    jsonOutputStr = JSON.stringify(resObj);
+                    activeLayerName = "Layer 1 (ONNX) + Layer 4 Fallback";
+                } catch (err) {
+                    console.error("[GLiNER Browser Error]", err);
+                    if (isCancelled()) return;
+                    jsonOutputStr = extract_json_wasm(textInput, JSON.stringify(activeSchema));
+                    activeLayerName = "Proximity Heuristic Fallback";
+                }
+            } else {
+                try {
+                    // Call Rust library WASM binding
+                    jsonOutputStr = extract_json_wasm(textInput, JSON.stringify(activeSchema));
+                    activeLayerName = "Layer 4 (WASM Heuristic Only)";
+                } catch (err) {
+                    jsonOutputStr = JSON.stringify({ error: err.message }, null, 2);
+                    activeLayerName = "Extraction Failure";
+                }
+            }
+
+            if (isCancelled()) return;
+
+            const t1 = performance.now();
+            const elapsed = (t1 - t0).toFixed(2);
+
+            // Update latency HUD
+            const activeLabel = (glinerLayer && glinerLayer.active) ? "ONNX WASM" : "WASM Heuristics";
+            document.getElementById('speed-meter').textContent = `${activeLabel} | Latency: ${elapsed} ms`;
+
+            // Display Prettified JSON Object
+            const parsedObj = JSON.parse(jsonOutputStr);
+            document.getElementById('output-json').textContent = JSON.stringify(parsedObj, null, 2);
+
+            // Update fallback status badge to show exactly which layer succeeded
+            const fallbackBadge = document.getElementById('fallback-badge');
+            fallbackBadge.textContent = activeLayerName;
+            fallbackBadge.classList.remove('hidden', 'bg-amber-500/10', 'text-amber-300', 'border-amber-500/20', 'bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20', 'bg-rose-500/10', 'text-rose-400', 'border-rose-500/20');
+            
+            if (activeLayerName.includes("ONNX")) {
+                fallbackBadge.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20');
+            } else if (activeLayerName.includes("Fallback")) {
+                fallbackBadge.classList.add('bg-amber-500/10', 'text-amber-300', 'border-amber-500/20');
+            } else if (activeLayerName.includes("Failure")) {
+                fallbackBadge.classList.add('bg-rose-500/10', 'text-rose-400', 'border-rose-500/20');
+            } else {
+                fallbackBadge.classList.add('bg-indigo-500/10', 'text-indigo-400', 'border-indigo-500/20');
+            }
+
+            // Update Visual Attribute Cards List
+            renderVisualCards(parsedObj);
+        }
+
+        // Render card breakdowns
+        function renderVisualCards(data) {
+            const container = document.getElementById('visual-breakdown-container');
+            container.innerHTML = "";
+
+            if (!activeSchema.fields || activeSchema.fields.length === 0) {
+                container.innerHTML = "<div class='text-xs text-slate-500 italic p-4 text-center'>No schema fields populated</div>";
+                return;
+            }
+
+            activeSchema.fields.forEach(field => {
+                const val = data[field.name];
+                let valHtml = "";
+                let typeColor = "";
+                let typeIcon = "";
+
+                if (field.field_type === "String") {
+                    typeColor = "text-amber-400";
+                    typeIcon = "fa-quote-right";
+                    valHtml = `<span class="text-sm font-medium text-amber-300 break-words">${val !== undefined ? `"${val}"` : '<span class="text-slate-600 italic">null</span>'}</span>`;
+                } else if (field.field_type === "Integer" || field.field_type === "Float") {
+                    typeColor = "text-cyan-400";
+                    typeIcon = "fa-calculator";
+                    valHtml = `<span class="text-sm font-semibold text-cyan-300 code-font">${val !== undefined ? val : '<span class="text-slate-600 italic">0</span>'}</span>`;
+                } else if (field.field_type === "Boolean") {
+                    typeColor = "text-purple-400";
+                    typeIcon = "fa-toggle-on";
+                    const isTrue = val === true;
+                    valHtml = `<span class="text-xs px-2.5 py-1 rounded-full font-bold ${isTrue ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-400 border border-slate-700'}">${isTrue ? 'TRUE' : 'FALSE'}</span>`;
+                }
+
+                const card = document.createElement("div");
+                card.className = "p-3 rounded-xl border border-white/5 glass-card bg-slate-900/40 relative group overflow-hidden transition-all duration-300 hover:border-slate-800";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 mb-1.5">
+                        <span class="text-xs font-semibold text-slate-300 code-font break-all flex items-center gap-1.5">
+                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-950 text-slate-400 uppercase tracking-widest border border-white/5">
+                                ${field.field_type}
+                            </span>
+                            ${field.name}
+                        </span>
+                        <i class="fa-solid ${typeIcon} text-[10px] ${typeColor} opacity-40"></i>
+                    </div>
+                    <div class="mb-1">${valHtml}</div>
+                    <p class="text-[10px] text-slate-500 italic mt-1 leading-snug">${field.description || '(No description)'}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Generate Domain Preset Selectors
+        function renderPresetsAndAttach() {
+            const container = document.getElementById('preset-buttons');
+            container.innerHTML = "";
+            presets.forEach(p => {
+                const btn = document.createElement('button');
+                btn.className = "flex items-center gap-3 p-3 text-left rounded-xl border border-white/5 glass-card hover:bg-slate-800/40 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all duration-300 glow-blue text-xs";
+                btn.innerHTML = `
+                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-950/80 border border-white/5 text-sm">
+                        <i class="fa-solid ${p.icon}"></i>
+                    </div>
+                    <div class="truncate">
+                        <span class="font-medium text-slate-200 block truncate">${p.label}</span>
+                        <span class="text-[9px] text-slate-500 code-font block uppercase">${p.schema.fields.length} criteria</span>
+                    </div>
+                `;
+                btn.addEventListener('click', () => {
+                    document.getElementById('source-text').value = p.text;
+                    window.activeSchema = activeSchema = JSON.parse(JSON.stringify(p.schema));
+                    renderSchemaBuilder();
+                    runExtraction();
+                });
+                container.appendChild(btn);
+            });
+
+            // Auto-load First Preset
+            document.getElementById('source-text').value = presets[0].text;
+        }
+
+        // Render pipeline execution hierarchy list
+        function renderPipeline() {
+            const container = document.getElementById('pipeline-layers');
+            container.innerHTML = "";
+
+            layersOrder.forEach((l, index) => {
+                const devCard = document.createElement("div");
+                devCard.className = `p-3 rounded-xl border ${l.active ? 'border-blue-500/25 bg-blue-500/5' : 'border-white/5 bg-slate-900/10'} flex items-center justify-between gap-3 group transition-all duration-200`;
+                devCard.innerHTML = `
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <!-- Up/Down Sorting Buttons -->
+                        <div class="flex flex-col gap-0.5 opacity-40 group-hover:opacity-100 transition-all duration-300">
+                            <button class="up-btn text-[10px] hover:text-cyan-400 p-0.5 focus:outline-none" data-idx="${index}" ${index === 0 ? 'disabled class="opacity-20 pointer-events-none"' : ''}>
+                                <i class="fa-solid fa-chevron-up"></i>
+                            </button>
+                            <button class="down-btn text-[10px] hover:text-cyan-400 p-0.5 focus:outline-none" data-idx="${index}" ${index === layersOrder.length - 1 ? 'disabled class="opacity-20 pointer-events-none"' : ''}>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="truncate">
+                            <h3 class="text-xs font-semibold text-slate-200 truncate flex items-center gap-2">
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-950 font-bold text-slate-400">
+                                    Step ${index + 1}
+                                </span>
+                                ${l.label}
+                            </h3>
+                            <p class="text-[10px] text-slate-500 truncate mt-0.5">${l.description}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-[9px] px-1.5 py-0.5 rounded border ${l.badgeColor} font-semibold uppercase tracking-wider">
+                            ${l.badge}
+                        </span>
+                        <label class="relative inline-flex items-center cursor-pointer select-none">
+                            <input type="checkbox" class="sr-only peer" ${l.active ? 'checked' : ''} data-id="${l.id}">
+                            <div class="w-7 h-4 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600 peer-checked:after:bg-white peer-checked:after:border-white"></div>
+                        </label>
+                    </div>
+                `;
+
+                // Handle Checkbox Toggles
+                const checkbox = devCard.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    const target = layersOrder.find(item => item.id === id);
+                    if (target) {
+                        target.active = e.target.checked;
+                        runExtraction();
+                    }
+                });
+
+                // Attach Order Sorting Operations
+                const upBtn = devCard.querySelector('.up-btn');
+                if (upBtn) {
+                    upBtn.addEventListener('click', () => {
+                        const idx = parseInt(upBtn.getAttribute('data-idx'));
+                        if (idx > 0) {
+                            const temp = layersOrder[idx];
+                            layersOrder[idx] = layersOrder[idx - 1];
+                            layersOrder[idx - 1] = temp;
+                            renderPipeline();
+                            runExtraction();
+                        }
+                    });
+                }
+
+                const downBtn = devCard.querySelector('.down-btn');
+                if (downBtn) {
+                    downBtn.addEventListener('click', () => {
+                        const idx = parseInt(downBtn.getAttribute('data-idx'));
+                        if (idx < layersOrder.length - 1) {
+                            const temp = layersOrder[idx];
+                            layersOrder[idx] = layersOrder[idx + 1];
+                            layersOrder[idx + 1] = temp;
+                            renderPipeline();
+                            runExtraction();
+                        }
+                    });
+                }
+
+                container.appendChild(devCard);
+            });
+        }
+
+        // Render current Schema Fields Builder UI list
+        function renderSchemaBuilder() {
+            const container = document.getElementById('schema-fields-container');
+            container.innerHTML = "";
+
+            if (!activeSchema.fields || activeSchema.fields.length === 0) {
+                container.innerHTML = "<div class='text-xs text-slate-500 italic p-4 text-center'>No schema fields. Click \"Add Field\" to get started.</div>";
+                return;
+            }
+
+            activeSchema.fields.forEach((field, index) => {
+                const fieldRow = document.createElement("div");
+                fieldRow.className = "p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col md:grid md:grid-cols-12 gap-3 items-center relative group";
+                
+                fieldRow.innerHTML = `
+                    <!-- Name -->
+                    <div class="w-full md:col-span-3">
+                        <label class="text-[9px] uppercase tracking-wider text-slate-400 block mb-1">Field Key</label>
+                        <input type="text" class="field-name w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-slate-200 focus:outline-none focus:border-blue-500 code-font" value="${field.name}" data-idx="${index}">
+                    </div>
+
+                    <!-- Type -->
+                    <div class="w-full md:col-span-3">
+                        <label class="text-[9px] uppercase tracking-wider text-slate-400 block mb-1">Data Type</label>
+                        <select class="field-type w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-slate-300 focus:outline-none focus:border-blue-500" data-idx="${index}">
+                            <option value="String" ${field.field_type === 'String' ? 'selected' : ''}>String (Text)</option>
+                            <option value="Integer" ${field.field_type === 'Integer' ? 'selected' : ''}>Integer (Num)</option>
+                            <option value="Float" ${field.field_type === 'Float' ? 'selected' : ''}>Float (Decimal)</option>
+                            <option value="Boolean" ${field.field_type === 'Boolean' ? 'selected' : ''}>Boolean (T/F)</option>
+                        </select>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="w-full md:col-span-4">
+                        <label class="text-[9px] uppercase tracking-wider text-slate-400 block mb-1">Description Hint</label>
+                        <input type="text" class="field-desc w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-slate-200 focus:outline-none focus:border-blue-500" value="${field.description || ''}" data-idx="${index}" placeholder="Describe variable context">
+                    </div>
+
+                    <!-- Required Toggle & Remove -->
+                    <div class="w-full md:col-span-2 flex items-center justify-between gap-2 pt-2 md:pt-4">
+                        <label class="flex items-center gap-1.5 cursor-pointer text-[10px] text-slate-400">
+                            <input type="checkbox" class="field-req rounded bg-slate-950 border-slate-800 text-blue-500 focus:ring-0 focus:ring-offset-0" ${field.required ? 'checked' : ''} data-idx="${index}">
+                            Req?
+                        </label>
+                        <button class="remove-field-btn text-slate-500 hover:text-rose-400 p-1.5 rounded bg-slate-950/60 border border-slate-800 focus:outline-none transition-all duration-200" data-idx="${index}" title="Remove field">
+                            <i class="fa-solid fa-trash-can text-[11px]"></i>
+                        </button>
+                    </div>
+                `;
+
+                // Handle inputs changes to trigger hot extraction reload
+                fieldRow.querySelector('.field-name').addEventListener('input', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-idx'));
+                    activeSchema.fields[idx].name = e.target.value.trim();
+                    runExtraction();
+                });
+
+                fieldRow.querySelector('.field-type').addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-idx'));
+                    activeSchema.fields[idx].field_type = e.target.value;
+                    runExtraction();
+                });
+
+                fieldRow.querySelector('.field-desc').addEventListener('input', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-idx'));
+                    activeSchema.fields[idx].description = e.target.value;
+                    runExtraction();
+                });
+
+                fieldRow.querySelector('.field-req').addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-idx'));
+                    activeSchema.fields[idx].required = e.target.checked;
+                    runExtraction();
+                });
+
+                fieldRow.querySelector('.remove-field-btn').addEventListener('click', (e) => {
+                    const idx = parseInt(e.currentTarget.getAttribute('data-idx'));
+                    activeSchema.fields.splice(idx, 1);
+                    renderSchemaBuilder();
+                    runExtraction();
+                });
+
+                container.appendChild(fieldRow);
+            });
+        }
+
+        // Add New Field entry row to criteria
+        document.getElementById('add-field-btn').addEventListener('click', () => {
+            activeSchema.fields.push({
+                name: "new_attribute_" + (activeSchema.fields.length + 1),
+                field_type: "String",
+                description: "Describe attribute to extract",
+                required: false
+            });
+            renderSchemaBuilder();
+            // Scroll container to bottom
+            const container = document.getElementById('schema-fields-container');
+            container.scrollTop = container.scrollHeight;
+            runExtraction();
+        });
+
+        // Setup text area inputs key Listener
+        document.getElementById('source-text').addEventListener('input', () => {
+            runExtraction();
+        });
+
+        // Setup Clear and Extract manual buttons
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            document.getElementById('source-text').value = "";
+            runExtraction();
+        });
+
+        document.getElementById('extract-btn').addEventListener('click', () => {
+            runExtraction();
+        });
+
+        // Copy Clipboard Button
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            const output = document.getElementById('output-json').textContent;
+            navigator.clipboard.writeText(output).then(() => {
+                const btn = document.getElementById('copy-btn');
+                const orig = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> Copied!`;
+                btn.classList.add('border-emerald-500/40', 'bg-emerald-500/5');
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.classList.remove('border-emerald-500/40', 'bg-emerald-500/5');
+                }, 2000);
+            });
+        });
+
+        // Download JSON button
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const output = document.getElementById('output-json').textContent;
+            const blob = new Blob([output], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `extracted_payload_${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Page initialization sequence
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPresetsAndAttach();
+            renderPipeline();
+            renderSchemaBuilder();
+            initWasm();
+        });
+    </script>
+</body>
+</html>

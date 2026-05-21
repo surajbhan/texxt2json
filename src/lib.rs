@@ -1,14 +1,10 @@
+#[cfg(feature = "native")]
 pub mod layers;
 pub mod schema;
 
 pub use schema::{ExtractionSchema, FieldSchema, FieldType};
+#[cfg(feature = "native")]
 use anyhow::Result;
-
-pub struct MultiLayerParser {
-    gliner_layer: Option<layers::gliner::GlinerLayer>,
-    flan_layer: Option<layers::flan::FlanLayer>,
-    qwen_layer: Option<layers::qwen::QwenLayer>,
-}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum ExtractionLayer {
@@ -18,6 +14,15 @@ pub enum ExtractionLayer {
     ProximityHeuristic,
 }
 
+#[cfg(feature = "native")]
+pub struct MultiLayerParser {
+    gliner_layer: Option<layers::gliner::GlinerLayer>,
+    flan_layer: Option<layers::flan::FlanLayer>,
+    qwen_layer: Option<layers::qwen::QwenLayer>,
+    layer_order: Vec<ExtractionLayer>,
+}
+
+#[cfg(feature = "native")]
 impl MultiLayerParser {
     pub fn new(gliner_path: &str, flan_path: &str, qwen_path: &str) -> Result<Self> {
         let gliner_layer = if !gliner_path.is_empty() && std::path::Path::new(gliner_path).exists() {
@@ -58,58 +63,91 @@ impl MultiLayerParser {
             gliner_layer,
             flan_layer,
             qwen_layer,
+            layer_order: vec![
+                ExtractionLayer::Gliner,
+                ExtractionLayer::Flan,
+                ExtractionLayer::Qwen,
+                ExtractionLayer::ProximityHeuristic,
+            ],
         })
+    }
+
+    pub fn default_empty() -> Self {
+        Self {
+            gliner_layer: None,
+            flan_layer: None,
+            qwen_layer: None,
+            layer_order: vec![
+                ExtractionLayer::Gliner,
+                ExtractionLayer::Flan,
+                ExtractionLayer::Qwen,
+                ExtractionLayer::ProximityHeuristic,
+            ],
+        }
+    }
+
+    pub fn with_layer_order(mut self, order: Vec<ExtractionLayer>) -> Self {
+        self.layer_order = order;
+        self
     }
 
     /// Primary execution routing mechanism using custom schemas returning metadata
     pub fn process_text_with_metadata(&self, input: &str, schema: &ExtractionSchema) -> (serde_json::Value, ExtractionLayer) {
         println!("[Pipeline] Sourcing message: \"{}\"", input);
 
-        // --- LAYER 1: GLiNER (ONNX) ---
-        if let Some(ref gliner) = self.gliner_layer {
-            match gliner.extract(input, schema) {
-                Ok(Some(raw)) => {
-                    println!("[Success] Executed via Layer 1 (GLiNER) ~10ms");
-                    return (raw, ExtractionLayer::Gliner);
+        for layer in &self.layer_order {
+            match layer {
+                ExtractionLayer::Gliner => {
+                    if let Some(ref gliner) = self.gliner_layer {
+                        match gliner.extract(input, schema) {
+                            Ok(Some(raw)) => {
+                                println!("[Success] Executed via Layer 1 (GLiNER) ~10ms");
+                                return (raw, ExtractionLayer::Gliner);
+                            }
+                            Ok(None) => {}
+                            Err(e) => {
+                                eprintln!("[Layer 1 Warning] Extraction error: {}", e);
+                            }
+                        }
+                        println!("[Fallback] Layer 1 missing variables or unparsable.");
+                    }
                 }
-                Ok(None) => {}
-                Err(e) => {
-                    eprintln!("[Layer 1 Warning] Extraction error: {}", e);
+                ExtractionLayer::Flan => {
+                    if let Some(ref flan) = self.flan_layer {
+                        match flan.translate(input, schema) {
+                            Ok(Some(raw)) => {
+                                println!("[Success] Executed via Layer 2 (Flan-T5) ~45ms");
+                                return (raw, ExtractionLayer::Flan);
+                            }
+                            Ok(None) => {}
+                            Err(e) => {
+                                eprintln!("[Layer 2 Warning] Translation error: {}", e);
+                            }
+                        }
+                        println!("[Fallback] Layer 2 failed execution sequence.");
+                    }
+                }
+                ExtractionLayer::Qwen => {
+                    if let Some(ref qwen) = self.qwen_layer {
+                        match qwen.extract(input, schema) {
+                            Ok(payload) => {
+                                println!("[Success] Handled by Layer 3 Failsafe (Qwen-0.8B) ~800ms");
+                                return (payload, ExtractionLayer::Qwen);
+                            }
+                            Err(e) => {
+                                eprintln!("[Layer 3 Warning] Failsafe generation failed: {}", e);
+                            }
+                        }
+                    }
+                }
+                ExtractionLayer::ProximityHeuristic => {
+                    println!("[Resiliency] Activating local high-fidelity entity segmenter.");
+                    return (extract_via_proximity_heuristic(input, schema), ExtractionLayer::ProximityHeuristic);
                 }
             }
-            println!("[Fallback] Layer 1 missing variables or unparsable.");
         }
 
-        // --- LAYER 2: FLAN-T5 (ONNX) ---
-        if let Some(ref flan) = self.flan_layer {
-            match flan.translate(input, schema) {
-                Ok(Some(raw)) => {
-                    println!("[Success] Executed via Layer 2 (Flan-T5) ~45ms");
-                    return (raw, ExtractionLayer::Flan);
-                }
-                Ok(None) => {}
-                Err(e) => {
-                    eprintln!("[Layer 2 Warning] Translation error: {}", e);
-                }
-            }
-            println!("[Fallback] Layer 2 failed execution sequence.");
-        }
-
-        // --- LAYER 3: Qwen 3.5 0.8B (GGUF) ---
-        if let Some(ref qwen) = self.qwen_layer {
-            match qwen.extract(input, schema) {
-                Ok(payload) => {
-                    println!("[Success] Handled by Layer 3 Failsafe (Qwen-0.8B) ~800ms");
-                    return (payload, ExtractionLayer::Qwen);
-                }
-                Err(e) => {
-                    eprintln!("[Layer 3 Warning] Failsafe generation failed: {}", e);
-                }
-            }
-        }
-
-        // --- LAYER 4: Local High-Fidelity Heuristic Fallback (Production-ready resiliency) ---
-        println!("[Resiliency] Activating local high-fidelity entity segmenter.");
+        println!("[Resiliency] Activating fallback local high-fidelity entity segmenter.");
         (extract_via_proximity_heuristic(input, schema), ExtractionLayer::ProximityHeuristic)
     }
 
@@ -119,20 +157,37 @@ impl MultiLayerParser {
     }
 }
 
-
 /// Top-level convenience function that takes an input string and a schema,
 /// and produces the extracted JSON payload.
 pub fn extract_json(input: &str, schema: &ExtractionSchema) -> serde_json::Value {
-    let parser = MultiLayerParser::new(
-        "models/gliner_medium.onnx",
-        "models/flan_t5_encoder.onnx",
-        "models/qwen3.5_0.8b_q4.gguf"
-    ).unwrap_or_else(|_| MultiLayerParser {
-        gliner_layer: None,
-        flan_layer: None,
-        qwen_layer: None,
-    });
-    parser.process_text(input, schema)
+    #[cfg(feature = "native")]
+    {
+        let parser = MultiLayerParser::new(
+            "models/gliner_medium.onnx",
+            "models/flan_t5_encoder.onnx",
+            "models/qwen3.5_0.8b_q4.gguf"
+        ).unwrap_or_else(|_| MultiLayerParser::default_empty());
+        parser.process_text(input, schema)
+    }
+    #[cfg(not(feature = "native"))]
+    {
+        extract_via_proximity_heuristic(input, schema)
+    }
+}
+
+// --- WebAssembly Bindings ---
+#[cfg(feature = "wasm")]
+use wasm_bindgen::prelude::*;
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn extract_json_wasm(input: &str, schema_json_str: &str) -> String {
+    let schema: ExtractionSchema = match serde_json::from_str(schema_json_str) {
+        Ok(s) => s,
+        Err(e) => return format!("{{\"error\": \"Invalid Schema JSON: {}\"}}", e),
+    };
+    let result = extract_via_proximity_heuristic(input, &schema);
+    serde_json::to_string_pretty(&result).unwrap_or_else(|_| "{}".to_string())
 }
 
 const STOPWORDS: &[&str] = &[

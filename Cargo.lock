@@ -708,8 +708,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ff2abc00be7fca6ebc474524697ae276ad847ad0a6b3faa4bcb027e9a4614ad0"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "wasi",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -719,9 +721,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "899def5c37c4fd7b2664648c28120ecec138e4d395b459e5ca34f9cce2dd77fd"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "r-efi",
  "wasip2",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -1619,6 +1623,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde-wasm-bindgen"
+version = "0.6.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8302e169f0eddcc139c70f139d19d6467353af16f9fce27e8c30158036a1e16b"
+dependencies = [
+ "js-sys",
+ "serde",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "serde_core"
 version = "1.0.228"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1739,6 +1754,8 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "encoding_rs",
+ "getrandom 0.2.17",
+ "getrandom 0.3.4",
  "gline-rs",
  "llama-cpp-2",
  "ndarray",
@@ -1747,8 +1764,10 @@ dependencies = [
  "ort",
  "regex",
  "serde",
+ "serde-wasm-bindgen",
  "serde_json",
  "tokenizers 0.15.2",
+ "wasm-bindgen",
 ]
 
 [[package]]

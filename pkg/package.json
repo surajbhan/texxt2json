@@ -1,0 +1,15 @@
+{
+  "name": "structured_json_pipeline",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "structured_json_pipeline_bg.wasm",
+    "structured_json_pipeline.js",
+    "structured_json_pipeline.d.ts"
+  ],
+  "main": "structured_json_pipeline.js",
+  "types": "structured_json_pipeline.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
